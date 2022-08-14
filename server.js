@@ -139,5 +139,87 @@ const chooseRequest = () => {
           chooseRequest();
         })
       }
+
+
+    //createEmployee
+    async function createEmployee() {
+
+    let roleIdA = [];
+    let roleTitleA = [];
+ 
+    const [roles, rolesField] = await db.promise().query('Choose the Id and title for roles'); 
+    let rolesA = roles.map((element, index)=>{
+     let id = element.id;
+     let title = element.title;
+ 
+     roleIdA.push(id)
+     roleTitleA.push(title)
+    });
+ 
+   const [managersName, roleIdfields] = await db.promise().query(`
+   SELECT CONCAT(manager.first_name, " ", manager.last_name) AS Manager 
+   FROM employees employee
+   LEFT JOIN employees Manager ON employee.manager_id = manager.id
+   WHERE employee.id = 2 OR employee.id = 4 OR employee.id = 6 OR employee.id = 8;`); 
+   let arrayManagers = managersName.map((element, index)=>element.Manager);
+ 
+   let managerIdA = [];
+   let managerNameA = [];
+ 
+   const [idManager, idManagerfields] = await db.promise().query(`SELECT id, CONCAT(employees.first_name, ' ', employees.last_name)AS managerName FROM employees;`)
+   let managerName = idManager.map((element, index)=>{
+     let id = element.id;
+     let name = element.managerName;
+     managerIdA.push(id);
+     managerNameA.push(name);
+   });
+ 
+   inquirer
+   .prompt([
+     {
+       type: 'input',
+       message: `Employee's first name?`,
+       name: 'firstName',
+     },
+     {
+       type: 'input',
+       message: `Employee's last name?`,
+       name: 'lastName',
+     },
+     {
+      type: 'rawlist',
+      message: `Employee's role?`,
+      name: 'employeeRole',
+      choices: roleTitleA
+     },
+     {
+      type: 'rawlist',
+      message: `What is the employee's manager?`,
+      name: 'manager',
+      choices: arrayManagers
+     },
+     
+   ]).then(userInput =>{
+     const {firstName, lastName, employeeRole, manager } = userInput;
+ 
+     if( roleTitleA.includes(employeeRole) && arrayManagers.includes(manager) ){
+         
+       const roleI = roleTitleA.indexOf(employeeRole);
+       const roleF = roleIdA[roleI];
+ 
+       const managerI = managerNameA.indexOf(manager);
+
+       const findManagerId = managerIdA[managerI]
+
+       query.addEmployee(firstName,lastName, roleF, findManagerId );
+   
+     }else{
+       console.log(`Error`)
+     }
+     chooseRequest();
+   });
+}
+ 
+ 
    
    chooseRequest();
