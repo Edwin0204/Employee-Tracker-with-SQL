@@ -194,7 +194,7 @@ const chooseRequest = () => {
      },
      {
       type: 'rawlist',
-      message: `What is the employee's manager?`,
+      message: `Employee's manager?`,
       name: 'manager',
       choices: arrayManagers
      },
@@ -220,6 +220,75 @@ const chooseRequest = () => {
    });
 }
  
+
+//Update Employee
+async function updateEmployee(){
+
+  let employeeIdA = [];
+  let employeeNameA = [];
+
+  const [employees, fiels] = await db.promise().query(`SELECT id, CONCAT(first_name, ' ', last_name) AS employee FROM employees;`);
+  let employeesName = employees.map((element, index)=>{
+      let name =  element.ename;
+      let id = element.id
+      employeeIdA.push(id)
+      employeeNameA.push(name)  
+    });
+    
+  let rolesIdA = []
+  let rolesTitleA = []
+
+  const [rolesTitleId, fieldsId] = await db.promise().query(`SELECT  roles.id, roles.title FROM roles`);
+  let roleId = rolesTitleId.map((element, index)=>{
+      let id = element.id; 
+      let title = element.title
+
+      rolesTitleA.push(title)
+      rolesIdA.push(id)
+  });
+
+  inquirer
+  .prompt([
+    {
+      type: 'rawlist',
+      message: `Which employee do you want to update?` ,
+      name: 'ename',
+      choices: employeeNameA
+    },
+    {
+      type: 'rawlist',
+      message: 'Which role do you want to assign?',
+      name: 'updateRole',
+      choices: rolesTitleA
+    }
+  ])
+  .then(userChoices=>{
+    const {employee, updateRole } = userChoices;
+
+    if(rolesTitleA.includes(updateRole) && employeeNameA.includes(employee)){
+      console.log('Employee found')
+
+      let employeeIndexF = employeeNameA.indexOf(employee);
+
+      let findEmployeeIdA = employeeIdA[employeeIndexF];
+
+      let indexRole = rolesTitleA.indexOf(updateRole);
+    
+      let findRoleId = rolesIdA[indexRole]
+      
+      query.addUpdatedEmployee(findRoleId, findEmployeeIdA);
+    }else{
+      console.log(`Role not found`)
+    }
+    chooseRequest();
+  })
+}
+
+
+function finish(){
+  
+  return console.log("Thankyou for using the Employee Tracker") ;
+}
  
    
    chooseRequest();
