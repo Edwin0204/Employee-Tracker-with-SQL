@@ -43,8 +43,23 @@ function addEmployee (firstName, lastName, roleId, managerId){
   });
 }
 
+//Update Employee role
+function addEmployeeUpdate (newIdRole, employeeId){
+  db.query(`
+  UPDATE employees SET role_id = ? WHERE id = ?;`, [newIdRole, employeeId ],
+  (err, result)=>{
+    if(err){
+      console.log("Error conecting to DB");
+    }else{
+      console.log(`Employee updated`);
+    }
+  });
+}
+
+
   module.exports = {
     addDept,
     addRole,
-    addEmployee 
+    addEmployee,
+    addEmployeeUpdate, 
     }
