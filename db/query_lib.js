@@ -57,9 +57,19 @@ function addEmployeeUpdate (newIdRole, employeeId){
 }
 
 
+//View all Depts
+  async function viewDepts() {
+  const [rows,fields] = await db.promise().query("SELECT * FROM department;")
+  .catch(err=>{console.log('Error conecting to DB')});
+  console.table(rows);
+  console.log('Press Space or move key Up or Down to select another choice');
+}
+
+
   module.exports = {
     addDept,
     addRole,
     addEmployee,
     addEmployeeUpdate, 
+    viewDepts,
     }
