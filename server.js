@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
 const db = require('./db/connection');
+let query = require('./db/query_lib')
 
 
 
@@ -26,17 +27,17 @@ const chooseRequest = () => {
         switch(userChoice.options){
    
          case 'View all departments':
-          sqlFunctions.viewDepts();
-           chooseRequest();
+         query.viewDepts();
+         chooseRequest();
          break;
          
          case 'View all roles':
-         sqlFunctions.viewRoles();
+         query.viewRoles();
          chooseRequest();
          break;
    
          case 'View all employees':
-         sqlFunctions.viewEmployees();
+         query.viewEmployees();
          chooseRequest();
          break;
    
