@@ -21,16 +21,30 @@ function addDept(createDept) {
   function addRole(newRole, salary, deptId){
   db.query(`INSERT INTO roles(title, salary, department_id) VALUES (?, ?, ?)`, [newRole, salary, deptId] ,(err, result)=>{
     if(err){
-      console.log("Ups! Something went wrong when trying to connect to database");
+      console.log("Error conecting to DB");
     } else{
-      console.log(`${newRole} role successfully created`);
+      console.log(`${newRole} role created`);
     }
   });
 
 }
 
 
+//CreateEmployee
+function addEmployee (firstName, lastName, roleId, managerId){
+  db.query(`
+  INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?);`, [firstName, lastName, roleId, managerId],
+  (err, result)=>{
+    if(err){
+      console.log("Error conecting to DB");
+    }else{
+      console.log(`Employee added`);
+    }
+  });
+}
+
   module.exports = {
     addDept,
     addRole,
+    addEmployee 
     }
