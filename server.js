@@ -63,7 +63,24 @@ const chooseRequest = () => {
      })
    }
 
-
+   // Add a department
+   function createDept(){
+    inquirer
+    .prompt([
+      {
+        type: 'input',
+        message: `Enter the name of the new department`,
+        name: 'department',
+     }
+    ]).then(userInput =>{
+      const {department } = userInput;
+  
+      //Creating  a new Department
+      sqlFunctions.addDept(department);
+      console.log(`${department} created`);
+      managerOptions();
+    })
+  }
 
    
    chooseRequest();
