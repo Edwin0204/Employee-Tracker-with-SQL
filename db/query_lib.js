@@ -11,7 +11,13 @@ function addDept(createDept) {
     db.query(`
     INSERT INTO department name;`, createDept, (err, result)=>{
       if(err){
-        console.log("Ups! Something went wrong when trying to connect to database");
+        console.log("Error conecting to DB");
       }
     });
   }
+
+
+
+  module.exports = {
+    addDept,
+    }

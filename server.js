@@ -77,11 +77,67 @@ const chooseRequest = () => {
       const {department } = userInput;
   
       //Creating  a new Department
-      sqlFunctions.addDept(department);
+      query.addDept(department);
       console.log(`${department} created`);
-      managerOptions();
+      chooseRequest();
     })
   }
 
+    // Add a role
+    async function createRole(){
+
+        let deptsIdA = []
+        let deptsNameA = [];
+      
+        const [departments, fields] = await db.promise().query('Choose the id and name of the department'); 
+        const deparmentsArray = departments.map((element, index)=>{
+          let deptId = element.id;
+          let deptName = element.name;
+          deptsIdA.push(deptId)
+          deptsNameA.push(deptName)
+        });
+      
+        const [roles, roleFields] = await db.promise().query('Choose the name for the roles;'); 
+        let roleName = roles.map((element, index)=>element.title);
+        
+        inquirer
+        .prompt([
+          {
+          type: 'input',
+          message: `Enter the name of the role`,
+          name: 'role',
+          },
+          {
+          type: 'number',
+          message: `What's the salary for the new role`,
+          name: 'salary',
+          },
+          {
+          type: 'rawlist',
+          message: `In which department is the new role?`,
+          name: 'deptRole',
+          choices: deptsNameA
+          }
+         
+        ]).then(userInput =>{
+          const {role, salary, deptRole} = userInput;
+      
+          //Validate the information
+          if(deptsNameA.includes(deptRole)){
+      
+              if(roleName.includes(role)  ){
+                console.log(`The role already exists`)
+                chooseRequest();
+              }else{
+            let deptsList = deptsNameA.indexOf(deptRole);
+            let deptsIdFind = deptsIdA[deptsList];
+            
+            
+            query.addRole(role, salary, deptsIdFind);
+            }
+          }
+          chooseRequest();
+        })
+      }
    
    chooseRequest();
